@@ -1,5 +1,3 @@
-import Web3Comp from "./web3Comp";
-
 export default function Home() {
   return (
     <main className="flex min-h-screen flex-col items-center justify-between p-24">

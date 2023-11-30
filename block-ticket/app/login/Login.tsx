@@ -9,13 +9,13 @@ import { useAuth } from "../context/AuthContext";
 const TicketContractAddress = process.env.NEXT_PUBLIC_TICKET_CONTRACT_ADDRESS;
 
 const Login: React.FC = () => {
-  const { _username, isOrganiser, login } = useAuth();
-  const [showUser, setShowUser] = useState(true);
+  const { _username, _isOrganiser, login } = useAuth();
+  const [isOrganiser, setIsOrganiser] = useState(true);
   const [username, setUsername] = useState("");
   // const [isSuccessful, setIsSuccessful] = useState(true);
 
-  const toggleShowUser = (showUser: boolean) => {
-    setShowUser(showUser);
+  const toggleIsOrganiser = (isOrganiser: boolean) => {
+    setIsOrganiser(isOrganiser);
   };
 
   const handleUsernameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -42,7 +42,7 @@ const Login: React.FC = () => {
       // setIsSuccessful(userExists[0]);
       console.log(userExists);
       if (userExists[0]) {
-        login(username, !showUser);
+        login(username, !isOrganiser);
       }
 
       // setIsSuccessful(userExists);
@@ -57,20 +57,20 @@ const Login: React.FC = () => {
         <span className="flex flex-row mx-auto max-w-xl justify-between">
           <span
             onClick={() => {
-              toggleShowUser(true);
+              toggleIsOrganiser(true);
             }}
             className={`pr-10 w-full p-4 ${
-              showUser ? "bg-slate-300" : "text-slate-300 "
+              isOrganiser ? "bg-slate-300" : "text-slate-300 "
             } hover:cursor-pointer rounded-l-lg`}
           >
             <p>I am a user</p>
           </span>
           <span
             onClick={() => {
-              toggleShowUser(false);
+              toggleIsOrganiser(false);
             }}
             className={` w-full p-4 ${
-              showUser ? "text-slate-300" : "bg-slate-300"
+              isOrganiser ? "text-slate-300" : "bg-slate-300"
             } hover:cursor-pointer rounded-r-lg`}
           >
             <p>I am an event organiser</p>
@@ -100,7 +100,7 @@ const Login: React.FC = () => {
                 credentials.
               </p>
             </li>
-            {isOrganiser && (
+            {!_isOrganiser && (
               <li className="mt-8">
                 <Link href="/events">
                   <p className="underline">Browse events</p>
@@ -111,7 +111,7 @@ const Login: React.FC = () => {
                 </Link>
               </li>
             )}
-            {!isOrganiser && (
+            {_isOrganiser && (
               <li className="mt-8">
                 <Link href="/manage/events">
                   <p className="underline">Manage your events</p>

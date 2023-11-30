@@ -8,26 +8,26 @@ import React, {
 
 const AuthContext = createContext<ContextInterface>({
   _username: "",
-  isOrganiser: false,
+  _isOrganiser: false,
   login: () => {},
   logout: () => {},
 });
 
 interface ContextInterface {
   _username: string;
-  isOrganiser: boolean;
+  _isOrganiser: boolean;
   login: (username: string, isOrganiser: boolean) => void;
   logout: () => void;
 }
 export const AuthProvider = ({ children }: PropsWithChildren) => {
   const [_username, setUsername] = useState("");
-  const [isOrganiser, setIsOrganiser] = useState(false);
+  const [_isOrganiser, setIsOrganiser] = useState(false);
 
-  const login = (userName: string, _isOrganiser: boolean) => {
+  const login = (userName: string, isOrganiser: boolean) => {
     // Implement your login logic here
     console.log("LOGGING ÌN woth ", userName);
     setUsername(userName);
-    setIsOrganiser(_isOrganiser);
+    setIsOrganiser(isOrganiser);
   };
 
   const logout = () => {
@@ -37,7 +37,7 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
 
   const contextValue: ContextInterface = {
     _username,
-    isOrganiser,
+    _isOrganiser,
     login,
     logout,
   };

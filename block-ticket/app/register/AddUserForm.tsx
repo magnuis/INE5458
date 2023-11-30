@@ -11,7 +11,7 @@ const TicketContractAddress = process.env.NEXT_PUBLIC_TICKET_CONTRACT_ADDRESS;
 const AddUserForm: React.FC = () => {
   const { _username, login } = useAuth();
 
-  const [showUser, setShowUser] = useState(true);
+  const [isOrganiser, setIsOrganiser] = useState(true);
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [registered, setRegistered] = useState(false);
@@ -41,35 +41,23 @@ const AddUserForm: React.FC = () => {
     // Perform user registration on the smart contract
     try {
       const transaction = await contract.methods
-        .registerUser(username, showUser)
+        .registerUser(username, isOrganiser)
         .send({ from: currentAccount });
-
-      // // Get user details after successful registration
-      // const userDetails = await contract.methods
-      //   .getUserDetails(currentAccount)
-      //   .call();
 
       // Update the transaction hash in the state
       setTransactionHash(transaction.transactionHash);
 
-      // // Update the state with the registered user's credentials
-      // setRegisteredUser({
-      //   username: userDetails[0],
-      //   address: userDetails[1],
-      //   secretKeyHash: userDetails[2],
-      // });
-
       // Reset form fields after successful registration
       setEmail("");
       setRegistered(true);
-      login("", showUser);
+      login("", isOrganiser);
     } catch (error) {
       console.error("Error registering user:", error);
     }
   };
 
-  const toggleShowUser = (showUser: boolean) => {
-    setShowUser(showUser);
+  const toggleIsUser = (isOrganiser: boolean) => {
+    setIsOrganiser(isOrganiser);
     setEmail("");
     setUsername("");
     setTransactionHash("");
@@ -81,12 +69,13 @@ const AddUserForm: React.FC = () => {
         <span className="text-center flex flex-col items-center">
           <h1 className="text-5xl font-semibold mt-10 mb-20">
             {`Successfully registered ${
-              showUser ? "user" : "event organiser"
+              isOrganiser ? "event organiser" : "user"
             }!`}
           </h1>
           <p>
-            We successfully registered user with username {`${_username}`}.
-            Please proceed to{" "}
+            We successfully registered{" "}
+            {`${isOrganiser ? "event organiser" : "user"}`}
+            with username {`${_username}`}. Please proceed to{" "}
             {
               <Link className="underline" href={"login"}>
                 login
@@ -99,20 +88,20 @@ const AddUserForm: React.FC = () => {
           <span className="flex flex-row mx-auto max-w-xl justify-between">
             <span
               onClick={() => {
-                toggleShowUser(true);
+                toggleIsUser(true);
               }}
               className={`pr-10 w-full p-4 ${
-                showUser ? "bg-slate-300" : "text-slate-300 "
+                isOrganiser ? "bg-slate-300" : "text-slate-300 "
               } hover:cursor-pointer rounded-l-lg`}
             >
               <p>I am a user</p>
             </span>
             <span
               onClick={() => {
-                toggleShowUser(false);
+                toggleIsUser(false);
               }}
               className={` w-full p-4 ${
-                showUser ? "text-slate-300" : "bg-slate-300"
+                isOrganiser ? "text-slate-300" : "bg-slate-300"
               } hover:cursor-pointer rounded-r-lg`}
             >
               <p>I am an event organiser</p>
@@ -121,11 +110,11 @@ const AddUserForm: React.FC = () => {
           <span className="text-center">
             <h1 className="text-5xl font-semibold mt-10">
               {" "}
-              {`Register ${showUser ? "user" : "event organiser"}`}
+              {`Register ${isOrganiser ? "user" : "event organiser"}`}
             </h1>
           </span>
           <div className="font-mono mt-20 mx-auto max-w-lg">
-            {showUser ? (
+            {isOrganiser ? (
               <div>
                 <form onSubmit={handleSubmit}>
                   <div className="mb-4">
